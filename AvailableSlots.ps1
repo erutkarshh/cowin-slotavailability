@@ -92,6 +92,7 @@ try
 				    write-host "Available: "$session.available_capacity -ForegroundColor White -BackgroundColor DarkGreen
 
 				    $dataCount = $dataCount + 1        
+                    write-host "======================================================="
                 }
                 else
                 {
@@ -99,12 +100,14 @@ try
                     {
                         write-host "Block: "$session.block_name",			Pin Code: "$session.pincode",	" -nonewline        
 				        write-host "Available: "$session.available_capacity -ForegroundColor White -BackgroundColor DarkGreen
-                        write-host "Address: "$session.address"" -ForegroundColor White -BackgroundColor DarkGreen
+                        write-host "Address: "$session.address"" -ForegroundColor White
 
-				        $dataCount = $dataCount + 1    
+				        $dataCount = $dataCount + 1
+                        write-host "======================================================="    
                     }
                 }
-			}          
+			} 
+          
 		}    
 	}
 
