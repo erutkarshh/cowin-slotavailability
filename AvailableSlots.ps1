@@ -43,7 +43,7 @@ try
 		$districtName = Read-Host "Please enter district name. E.g. gwalior"
 		$uriDistricts = "https://cdn-api.co-vin.in/api/v2/admin/location/districts/$stateId"
 		$webDataDistricts = Invoke-RestMethod -Uri $uriDistricts
-		$districtData = $webDataDistricts.districts | where-object { $_.district_name -like "*$districtName*" } | Select $_.district_id
+		$districtData = $webDataDistricts.districts | where-object { $_.district_name -like "*$districtName*" } | Select $_
 		$dataCount = $districtData | measure
 		if($dataCount.Count -eq 1)
 		{
