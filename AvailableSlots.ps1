@@ -6,7 +6,7 @@ $flag = 0
 $id= Read-Host "Please enter district id (default is Pune)"
 if($id -eq '')
 {
-	$id = 363 # default value
+	$id = 393 # default value
 }
 
 try
