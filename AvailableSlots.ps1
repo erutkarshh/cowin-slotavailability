@@ -11,7 +11,7 @@ try
 	# find state
 	do
 	{
-		$stateName = Read-Host "Please enter state name. E.g. madhya pradesh"
+		$stateName = Read-Host "Please enter state name. E.g. maharashtra"
 		$uriStates = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
 		$webDataStates = Invoke-RestMethod -Uri $uriStates
 		$stateData = $webDataStates.states | where-object { $_.state_name -like "*$stateName*" } | Select $_
@@ -20,7 +20,7 @@ try
 		{
 			Write-Host "Is this correct state name? " -nonewline
 			Write-Host $stateData.state_name -ForegroundColor White -BackgroundColor DarkGreen
-			$correctState = Read-Host "Y/N?"
+			$correctState = Read-Host "y/n?"
 			if($correctState -eq 'y' -or $correctState -eq 'Y')
 			{
 				$stateId = $stateData.state_id
@@ -40,7 +40,7 @@ try
 	# find district
 	do
 	{
-		$districtName = Read-Host "Please enter district name. E.g. gwalior"
+		$districtName = Read-Host "Please enter district name. E.g. pune"
 		$uriDistricts = "https://cdn-api.co-vin.in/api/v2/admin/location/districts/$stateId"
 		$webDataDistricts = Invoke-RestMethod -Uri $uriDistricts
 		$districtData = $webDataDistricts.districts | where-object { $_.district_name -like "*$districtName*" } | Select $_
@@ -49,7 +49,7 @@ try
 		{
 			Write-Host "Is this correct district name? " -nonewline
 			Write-Host $districtData.district_name -ForegroundColor White -BackgroundColor DarkGreen
-			$correctDistrict = Read-Host "Y/N?"
+			$correctDistrict = Read-Host "y/n?"
 			if($correctDistrict -eq 'y' -or $correctDistrict -eq 'Y')
 			{
 				$districtId = $districtData.district_id
@@ -65,6 +65,12 @@ try
 			write-host 'Not able to find exact record. Try Again with another word.' -ForegroundColor White -BackgroundColor Red
 		}
 	}while($flag -eq 1)
+
+    $pincodeChoice = Read-Host "Please enter choice of pincode(s)(411026,411027,411028 or default is all)"
+    if($pincodeChoice -eq '')
+    {
+	    $pincodeChoice = "ALL"
+    }
 	
 	# find slots
 	do
@@ -80,11 +86,28 @@ try
 		{
 			if($session.min_age_limit -eq $null -OR $session.min_age_limit -le $minAgeLimit)
 			{
-				write-host "Block: "$session.block_name",			Pin Code: "$session.pincode",	" -nonewline        
-				write-host "Available: "$session.available_capacity -ForegroundColor White -BackgroundColor DarkGreen
+                if($pincodeChoice -eq "ALL")
+                {
+				    write-host "Block: "$session.block_name",			Pin Code: "$session.pincode",	" -nonewline        
+				    write-host "Available: "$session.available_capacity -ForegroundColor White -BackgroundColor DarkGreen
 
-				$dataCount = $dataCount + 1        
-			}          
+				    $dataCount = $dataCount + 1        
+                    write-host "======================================================="
+                }
+                else
+                {
+                    if($pincodeChoice.contains($session.pincode))
+                    {
+                        write-host "Block: "$session.block_name",			Pin Code: "$session.pincode",	" -nonewline        
+				        write-host "Available: "$session.available_capacity -ForegroundColor White -BackgroundColor DarkGreen
+                        write-host "Address: "$session.address"" -ForegroundColor White
+
+				        $dataCount = $dataCount + 1
+                        write-host "======================================================="    
+                    }
+                }
+			} 
+          
 		}    
 	}
 
@@ -98,7 +121,7 @@ try
 	}
 
 	Write-Host
-	Write-Host "LastRefresh: $currentTime, Age Group: $minAgeLimit Years, Next Refresh In: $waitSeconds Seconds" -ForegroundColor Black -BackgroundColor Yellow
+	Write-Host "LastRefresh: $currentTime, Age Group: $minAgeLimit Years, For date: $date, Next Refresh In: $waitSeconds Seconds" -ForegroundColor Black -BackgroundColor Gray
 	Write-Host "---------------------------------------------------------"
 	Start-Sleep -s $waitSeconds
 	}while($flag -eq 2)
