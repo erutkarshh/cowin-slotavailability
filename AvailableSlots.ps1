@@ -127,6 +127,11 @@ try
 	}while($flag -eq 2)
 
 }
-catch{
-	write-error "An Error Occurred."
+catch [Exception]{
+	Write-Host "An Error Occurred while calling API. $_" -ForegroundColor Red
+	[console]::beep(1000,300)
+}
+finally{	
+	Write-Host "Script Stopped. Press any key to exit..."
+	Read-Host
 }
