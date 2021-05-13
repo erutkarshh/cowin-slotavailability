@@ -1,5 +1,5 @@
-$date = Read-Host "Please enter desired slot date (dd-mm-yyyy)"#"06-05-2021"
-$minAgeLimit = Read-Host "Please enter age group (18 or 45)" # 18 or 45
+$date = Read-Host "Please enter desired slot date (dd-mm-yyyy)"#"12-05-2021"
+$minAgeLimit = Read-Host "Please enter age group (18 or 45)" # 18
 $waitSeconds = 10
 $flag = 0
 
