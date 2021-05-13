@@ -71,10 +71,19 @@ try
     {
 	    $pincodeChoice = "ALL"
     }
-	
+
+	# Vaccine type
+	$vaccineType = Read-Host "Please select Vaccine Type:- 0 = ANY (default); 1 = COVAXIN; 2 = COVISHIELD"
+	if($vaccineType -eq '1'){
+		$vaccineType = "COVAXIN"
+	} elseif ($vaccineType -eq '2') {
+		$vaccineType = "COVISHIELD"
+	} else {
+		$vaccineType = "ANY"
+	}
+
 	# find slots
-	do
-	{
+	do {
 	$currentTime = Get-Date -Format "dd/MMM/yyyy HH:mm:ss"
 	$uri = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=$districtId&date=$date"
 	$webData = Invoke-RestMethod -Uri $uri
@@ -86,42 +95,55 @@ try
 		{
 			if($session.min_age_limit -eq $null -OR $session.min_age_limit -le $minAgeLimit)
 			{
-                if($pincodeChoice -eq "ALL")
-                {
-				    write-host "Block: "$session.block_name",			Pin Code: "$session.pincode",	" -nonewline        
-				    write-host "Available: "$session.available_capacity -ForegroundColor White -BackgroundColor DarkGreen
-
-				    $dataCount = $dataCount + 1        
-                    write-host "======================================================="
-                }
-                else
-                {
-                    if($pincodeChoice.contains($session.pincode))
-                    {
-                        write-host "Block: "$session.block_name",			Pin Code: "$session.pincode",	" -nonewline        
-				        write-host "Available: "$session.available_capacity -ForegroundColor White -BackgroundColor DarkGreen
-                        write-host "Address: "$session.address"" -ForegroundColor White
-
-				        $dataCount = $dataCount + 1
-                        write-host "======================================================="    
-                    }
-                }
+				if($vaccineType -eq 'COVAXIN' -or $vaccineType -eq 'COVISHIELD') 
+				{
+					if($vaccineType.contains($session.vaccine)) 
+					{
+						if($pincodeChoice -eq "ALL")
+							{ ShowVaccinationCenter($session); } 
+						else 
+						{
+							if($pincodeChoice.contains($session.pincode))
+							{ ShowVaccinationCenter($session); }
+						}
+					}
+				} 
+				else 
+				{
+					if($pincodeChoice -eq "ALL")
+						{ ShowVaccinationCenter($session); } 
+					else
+					{
+						if($pincodeChoice.contains($session.pincode))
+						{ ShowVaccinationCenter($session); }
+					}
+				}
 			} 
           
 		}    
 	}
+	function ShowVaccinationCenter ($session) {
+		write-host "Name: "$session.name
+		write-host "Pin Code: "$session.pincode       
+		write-host "Available: "$session.available_capacity -ForegroundColor White -BackgroundColor DarkGreen
+		write-host "Address: "$session.address"" -ForegroundColor White
+
+		$dataCount = $dataCount + 1
+		write-host "======================================================="    
+	}
 
 	if($dataCount -eq 0)
 	{
+		Write-Host
 		Write-Host "No slot available." -ForegroundColor White -BackgroundColor Red
 	}
 	else
 	{
-		[console]::beep(3000,500)
+		[console]::beep(5000,500)
 	}
 
 	Write-Host
-	Write-Host "LastRefresh: $currentTime, Age Group: $minAgeLimit Years, For date: $date, Next Refresh In: $waitSeconds Seconds" -ForegroundColor Black -BackgroundColor Gray
+	Write-Host "LastRefresh: $currentTime, Age Grp: $minAgeLimit+ , date: $date, vaccine: $vaccineType, Next Refresh in: $waitSeconds secs" -ForegroundColor Black -BackgroundColor Gray
 	Write-Host "---------------------------------------------------------"
 	Start-Sleep -s $waitSeconds
 	}while($flag -eq 2)
