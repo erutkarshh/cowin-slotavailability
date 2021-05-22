@@ -66,11 +66,21 @@ try
 		}
 	}while($flag -eq 1)
 
+	# post code
     $pincodeChoice = Read-Host "Please enter choice of pincode(s)(411026,411027,411028 or default is all)"
     if($pincodeChoice -eq '')
     {
 	    $pincodeChoice = "ALL"
     }
+	
+	# dose type
+	$doseType = Read-Host "Please enter choice dose (Enter 1: for 1st dose, 2: for 2nd dose, default is 1st dose)"
+    if($doseType -ne '1' -and $doseType -ne '2')
+    {
+	    $doseType = "1"
+    }
+	Write-Host "DoseSelected: " -nonewline
+	Write-Host $doseType -ForegroundColor White -BackgroundColor DarkGreen
 	
 	# find slots
 	do
@@ -83,27 +93,50 @@ try
 	{
 
 		foreach($session in $webData.sessions)
-		{
+		{			
 			if($session.min_age_limit -eq $null -OR $session.min_age_limit -le $minAgeLimit)
 			{
                 if($pincodeChoice -eq "ALL")
-                {
-				    write-host "Block: "$session.block_name",			Pin Code: "$session.pincode",	" -nonewline        
-				    write-host "Available: "$session.available_capacity -ForegroundColor White -BackgroundColor DarkGreen
-
-				    $dataCount = $dataCount + 1        
-                    write-host "======================================================="
+                {				    
+					if($doseType -eq '1' -and $session.available_capacity_dose1 -ne '0')
+					{
+						write-host "Block:"$session.block_name",	Pin Code:"$session.pincode", Vaccine:"$session.Vaccine",	Fee(Rupees):"$session.Fee",	" -nonewline
+						write-host "Available (1st Dose): "$session.available_capacity_dose1 -ForegroundColor White -BackgroundColor DarkGreen						
+					
+						$dataCount = $dataCount + 1        
+						write-host "======================================================="
+					}
+					elseif($session.available_capacity_dose2 -ne '0')
+					{
+						write-host "Block:"$session.block_name",		Pin Code:"$session.pincode", Vaccine:"$session.Vaccine",	Fee(Rupees):"$session.Fee",	" -nonewline
+						write-host "Available (2nd Dose): "$session.available_capacity_dose2 -ForegroundColor White -BackgroundColor DarkGreen
+						
+						$dataCount = $dataCount + 1        
+						write-host "======================================================="
+					}
                 }
                 else
                 {
                     if($pincodeChoice.contains($session.pincode))
-                    {
-                        write-host "Block: "$session.block_name",			Pin Code: "$session.pincode",	" -nonewline        
-				        write-host "Available: "$session.available_capacity -ForegroundColor White -BackgroundColor DarkGreen
-                        write-host "Address: "$session.address"" -ForegroundColor White
-
-				        $dataCount = $dataCount + 1
-                        write-host "======================================================="    
+                    {       
+				        if($doseType -eq '1' -and $session.available_capacity_dose1 -ne '0')
+						{
+							write-host "Block:"$session.block_name",		Pin Code:"$session.pincode", Vaccine:"$session.Vaccine",	Fee(Rupees):"$session.Fee",	" -nonewline
+							write-host "Available (1st Dose): "$session.available_capacity_dose1 -ForegroundColor White -BackgroundColor DarkGreen
+							write-host "Address: "$session.address"" -ForegroundColor White
+							
+							$dataCount = $dataCount + 1        
+							write-host "======================================================="
+						}
+						elseif($session.available_capacity_dose2 -ne '0')
+						{
+							write-host "Block:"$session.block_name",		Pin Code:"$session.pincode", Vaccine:"$session.Vaccine",	Fee(Rupees):"$session.Fee",	" -nonewline
+							write-host "Available (2nd Dose): "$session.available_capacity_dose2 -ForegroundColor White -BackgroundColor DarkGreen
+							write-host "Address: "$session.address"" -ForegroundColor White
+							
+							$dataCount = $dataCount + 1        
+							write-host "======================================================="
+						} 
                     }
                 }
 			} 
