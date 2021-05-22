@@ -17,4 +17,7 @@ Click on "HowToUseGuide.gif" file. It is a video tutorial to run the script.
     - Enter 1 for 1st dose
     - Enter 2 for 2nd dose
     - Any other entry will be considered default i.e. 1st dose
-    
+7. Choice of Vaccine
+    - Enter 1 for COVAXIN
+    - Enter 2 for COVISHIELD
+    - Any other entry will be considered default i.e. ANY Vaccine
