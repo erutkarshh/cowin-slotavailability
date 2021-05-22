@@ -10,7 +10,7 @@ function ShowVaccinationCenter($doseType, $session, [int]$dataCount) {
 		ShowVaccinationCenterBasicInformation $session
 		write-host "Available (1st Dose): "$session.available_capacity_dose1 -ForegroundColor White -BackgroundColor DarkGreen						
 	       
-		write-host "======================================================="		
+		write-host "================================================================================================================="		
 		
 		# increment data count
 		$dataCount = $dataCount + 1
@@ -20,7 +20,7 @@ function ShowVaccinationCenter($doseType, $session, [int]$dataCount) {
 		ShowVaccinationCenterBasicInformation $session
 		write-host "Available (2nd Dose): "$session.available_capacity_dose2 -ForegroundColor White -BackgroundColor DarkGreen
 		       
-		write-host "======================================================="
+		write-host "================================================================================================================="
 
 		# increment data count
 		$dataCount = $dataCount + 1
@@ -37,7 +37,7 @@ function ShowVaccinationCenterWithAddress($doseType, $session, [int]$dataCount) 
 		write-host "Available (1st Dose): "$session.available_capacity_dose1 -ForegroundColor White -BackgroundColor DarkGreen
 		write-host "Address: "$session.address"" -ForegroundColor White
 		      
-		write-host "======================================================="
+		write-host "================================================================================================================="
 
 		# increment data count
 		$dataCount = $dataCount + 1
@@ -48,7 +48,7 @@ function ShowVaccinationCenterWithAddress($doseType, $session, [int]$dataCount) 
 		write-host "Available (2nd Dose): "$session.available_capacity_dose2 -ForegroundColor White -BackgroundColor DarkGreen
 		write-host "Address: "$session.address"" -ForegroundColor White
 		       
-		write-host "======================================================="
+		write-host "================================================================================================================="
 
 		# increment data count
 		$dataCount = $dataCount + 1
@@ -209,7 +209,7 @@ try
 
 		Write-Host
 		Write-Host "LastRefresh: $currentTime, Age Group: $minAgeLimit Years, Date: $date, Dose:$doseType, Vaccine:$vaccineType, Next Refresh In: $waitSeconds Seconds" -ForegroundColor Black -BackgroundColor Gray
-		Write-Host "---------------------------------------------------------"
+		Write-Host "--------------------------------------------------------------------------------------------------------------------------"
 		Start-Sleep -s $waitSeconds
 	}while($flag -eq 2)
 
