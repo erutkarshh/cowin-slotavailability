@@ -74,7 +74,7 @@ try
     }
 	
 	# dose type
-	$doseType = Read-Host "Please enter choice dose (Enter 1: for 1st dose, 2: for 2nd dose, default is 1st dose)"
+	$doseType = Read-Host "Please enter choice of dose (for 1st dose press 1, for 2nd dose press 2, default is 1st dose)"
     if($doseType -ne '1' -and $doseType -ne '2')
     {
 	    $doseType = "1"
@@ -106,7 +106,7 @@ try
 						$dataCount = $dataCount + 1        
 						write-host "======================================================="
 					}
-					elseif($session.available_capacity_dose2 -ne '0')
+					elseif($doseType -eq '2' -and $session.available_capacity_dose2 -ne '0')
 					{
 						write-host "Block:"$session.block_name",		Pin Code:"$session.pincode", Vaccine:"$session.Vaccine",	Fee(Rupees):"$session.Fee",	" -nonewline
 						write-host "Available (2nd Dose): "$session.available_capacity_dose2 -ForegroundColor White -BackgroundColor DarkGreen
@@ -128,7 +128,7 @@ try
 							$dataCount = $dataCount + 1        
 							write-host "======================================================="
 						}
-						elseif($session.available_capacity_dose2 -ne '0')
+						elseif($doseType -eq '2' -and $session.available_capacity_dose2 -ne '0')
 						{
 							write-host "Block:"$session.block_name",		Pin Code:"$session.pincode", Vaccine:"$session.Vaccine",	Fee(Rupees):"$session.Fee",	" -nonewline
 							write-host "Available (2nd Dose): "$session.available_capacity_dose2 -ForegroundColor White -BackgroundColor DarkGreen
