@@ -103,8 +103,15 @@ try
 		$districtName = Read-Host "Please enter district name. E.g. pune"
 		$uriDistricts = "https://cdn-api.co-vin.in/api/v2/admin/location/districts/$stateId"
 		$webDataDistricts = Invoke-RestMethod -Uri $uriDistricts
+
+		# wild card match
 		$districtData = $webDataDistricts.districts | where-object { $_.district_name -like "*$districtName*" } | Select $_
 		$dataCount = $districtData | measure
+
+		# exact match
+		$districtDataExact = $webDataDistricts.districts | where-object { $_.district_name -eq "$districtName" } | Select $_
+		$dataCountExact = $districtDataExact | measure
+
 		if($dataCount.Count -eq 1)
 		{
 			Write-Host "Is this correct district name? " -nonewline
@@ -120,9 +127,25 @@ try
 				write-host 'Try Again.' -ForegroundColor White -BackgroundColor Red
 			}
 		}
+		elseif($dataCountExact.Count -eq 1)
+		{
+			Write-Host "Is this correct district name? " -nonewline
+			Write-Host $districtDataExact.district_name -ForegroundColor White -BackgroundColor DarkGreen
+			$correctDistrict = Read-Host "y/n?"
+			if($correctDistrict -eq 'y' -or $correctDistrict -eq 'Y')
+			{
+				$districtId = $districtDataExact.district_id
+				$flag = 2
+			}
+			else
+			{
+				write-host 'Try Again.' -ForegroundColor White -BackgroundColor Red
+			}
+		}
 		else
 		{
 			write-host 'Not able to find exact record. Try Again with another word.' -ForegroundColor White -BackgroundColor Red
+			write-host 'Records Found:'($districtData.district_name -join ",")
 		}
 	}while($flag -eq 1)
 
