@@ -70,6 +70,7 @@ try
 	# find state
 	do
 	{
+                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 		$stateName = Read-Host "Please enter state name. E.g. maharashtra"
 		$uriStates = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
 		$webDataStates = Invoke-RestMethod -Uri $uriStates
